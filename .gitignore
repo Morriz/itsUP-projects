@@ -1,0 +1,11 @@
+# Ignore data volumes (should be in upstream/)
+*/data/
+*/var/
+*/logs/
+*/*.db
+*/*.sqlite
+
+# Keep structure
+!*/docker-compose.yml
+!*/traefik.yml
+!traefik.yml
