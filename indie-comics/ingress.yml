@@ -1,0 +1,6 @@
+enabled: true
+ingress:
+- service: indie-comics-app
+  router: http
+  domain: indie-comics.instrukt.ai
+  port: 3000

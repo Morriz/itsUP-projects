@@ -1,0 +1,6 @@
+enabled: true
+ingress:
+- service: mf-app
+  router: http
+  domain: mauricefaber.nl
+  port: 8080

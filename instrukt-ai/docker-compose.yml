@@ -1,0 +1,143 @@
+services:
+  instrukt-ai-qdrant:
+    environment:
+    - QDRANT__SERVICE__API_KEY=${QDRANT_API_KEY}
+    expose:
+    - 6333/tcp
+    image: qdrant/qdrant:v1.15-unprivileged
+    networks:
+    - default
+    dns:
+    - 172.30.0.253
+    restart: unless-stopped
+    volumes:
+    - ./qdrant/storage:/qdrant/storage
+    healthcheck:
+      interval: 10s
+      retries: 5
+      test:
+      - CMD-SHELL
+      - bash -c ':</dev/tcp/127.0.0.1/6333' || exit 1
+      timeout: 5s
+    mem_limit: 450m
+  instrukt-ai-postgres:
+    environment:
+    - POSTGRES_DB=${PG_DB}
+    - POSTGRES_PASSWORD=${PG_DBPASS}
+    - POSTGRES_USER=${PG_DBUSER}
+    expose:
+    - 5432/tcp
+    image: postgres:15
+    networks:
+    - default
+    dns:
+    - 172.30.0.253
+    restart: unless-stopped
+    volumes:
+    - ./var/lib/postgresql/data:/var/lib/postgresql/data
+    healthcheck:
+      interval: 10s
+      retries: 5
+      test:
+      - CMD-SHELL
+      - pg_isready -U postgres
+      timeout: 5s
+  instrukt-ai-redis:
+    command: redis-server --requirepass ${REDIS_PASS} --bind 0.0.0.0 --tcp-keepalive
+      60 --timeout 300
+    expose:
+    - 6379/tcp
+    image: redis:7-alpine
+    networks:
+    - default
+    dns:
+    - 172.30.0.253
+    restart: unless-stopped
+    volumes:
+    - ./redis:/data
+    healthcheck:
+      interval: 5s
+      retries: 5
+      test:
+      - CMD-SHELL
+      - redis-cli ping
+      timeout: 3s
+  instrukt-ai-web:
+    depends_on:
+    - instrukt-ai-redis
+    environment:
+    - ANALYZE=${ANALYZE}
+    - APP_AWS_ACCESS_KEY=${APP_AWS_ACCESS_KEY}
+    - APP_AWS_REGION=${APP_AWS_REGION}
+    - APP_AWS_SECRET_KEY=${APP_AWS_SECRET_KEY}
+    - CONCURRENCY=${CONCURRENCY}
+    - CRISP_HOOK_SECRET=${SLACK_VERIFICATION_TOKEN}
+    - CRISP_TOKEN_ID=${SLACK_VERIFICATION_TOKEN}
+    - CRISP_TOKEN_KEY=${SLACK_VERIFICATION_TOKEN}
+    - DATABASE_URL=postgresql://${PG_DBUSER}:${PG_DBPASS}@${PG_HOST}:5432/${PG_DB}
+    - EMAIL_FROM=${EMAIL_FROM}
+    - EMAIL_REPLYTO=${EMAIL_REPLYTO}
+    - EMAIL_SERVER=${EMAIL_SERVER}
+    - GITHUB_ID=${GITHUB_ID}
+    - GITHUB_SECRET=${GITHUB_SECRET}
+    - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+    - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
+    - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
+    - NEXTAUTH_URL=${NEXTAUTH_URL}
+    - OPENAI_API_KEY=${OPENAI_API_KEY}
+    - QDRANT_API_KEY=${QDRANT_API_KEY}
+    - QDRANT_API_URL=${QDRANT_API_URL}
+    - REDIS_URL=redis://${REDIS_USER}:${REDIS_PASS}@${REDIS_HOST}:6379
+    - RETRY_DELAY=${RETRY_DELAY}
+    - SLACK_CLIENT_SECRET=${SLACK_VERIFICATION_TOKEN}
+    - SLACK_SIGNING_SECRET=${SLACK_VERIFICATION_TOKEN}
+    - SLACK_VERIFICATION_TOKEN=${SLACK_VERIFICATION_TOKEN}
+    - STRIPE_WEBHOOK_SECRET=${STRIPE_WEBHOOK_SECRET}
+    expose:
+    - 3000/tcp
+    image: morriz/instrukt-ai:main
+    networks:
+    - default
+    dns:
+    - 172.30.0.253
+    restart: unless-stopped
+    healthcheck:
+      interval: 30s
+      retries: 3
+      start_period: 40s
+      test:
+      - CMD
+      - sh
+      - -c
+      - 'test ! -f /tmp/drain && node -e "require(''http'').get(''http://localhost:3000'',
+        (r) => process.exit(r.statusCode === 200 ? 0 : 1)).on(''error'', () => process.exit(1))"'
+      timeout: 15s
+  instrukt-ai-worker:
+    depends_on:
+    - instrukt-ai-redis
+    environment:
+    - APP_AWS_ACCESS_KEY=${APP_AWS_ACCESS_KEY}
+    - APP_AWS_REGION=${APP_AWS_REGION}
+    - APP_AWS_SECRET_KEY=${APP_AWS_SECRET_KEY}
+    - CONCURRENCY=${CONCURRENCY}
+    - DATABASE_URL=${DATABASE_URL}
+    - OPENAI_API_KEY=${OPENAI_API_KEY}
+    - QDRANT_API_KEY=${QDRANT_API_KEY}
+    - QDRANT_API_URL=${QDRANT_API_URL}
+    - REDIS_URL=${REDIS_URL}
+    - WORKER_ROLE=${WORKER_ROLE}
+    image: morriz/instrukt-ai:main
+    networks:
+    - default
+    dns:
+    - 172.30.0.253
+    restart: unless-stopped
+    healthcheck:
+      interval: 30s
+      retries: 5
+      test:
+      - CMD
+      - sh
+      - -c
+      - test ! -f /tmp/drain && pgrep -f 'node'
+      timeout: 10s

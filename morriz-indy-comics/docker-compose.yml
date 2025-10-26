@@ -1,0 +1,19 @@
+services:
+  morriz-indy-comics-app:
+    expose:
+    - 8000/tcp
+    image: morriz/indy-comics:main
+    dns:
+    - 172.30.0.253
+    restart: unless-stopped
+    healthcheck:
+      interval: 30s
+      retries: 3
+      start_period: 30s
+      test:
+      - CMD
+      - sh
+      - -c
+      - test ! -f /tmp/drain && python3 -c "import socket; s=socket.socket(); s.settimeout(5);
+        s.connect((\"localhost\",8000)); s.close()"
+      timeout: 15s

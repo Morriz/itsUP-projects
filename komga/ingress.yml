@@ -1,0 +1,6 @@
+enabled: true
+ingress:
+- service: komga-app
+  router: http
+  domain: komga.srv.instrukt.ai
+  port: 25600

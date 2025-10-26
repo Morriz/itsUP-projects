@@ -1,0 +1,6 @@
+enabled: true
+ingress:
+- service: cookie-service-api
+  router: http
+  domain: cookies.srv.instrukt.ai
+  port: 8080

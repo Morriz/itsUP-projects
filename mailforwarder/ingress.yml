@@ -1,0 +1,7 @@
+enabled: true
+ingress:
+- service: mailforwarder-dummy
+  router: http
+  domain: mail.srv.instrukt.ai
+  path_prefix: /.well-known/acme-challenge/
+  port: 8080

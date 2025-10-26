@@ -1,0 +1,6 @@
+enabled: true
+ingress:
+- service: idiotz-app
+  router: http
+  domain: idiotz.nl
+  port: 8080

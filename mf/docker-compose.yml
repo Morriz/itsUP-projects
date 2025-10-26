@@ -1,0 +1,47 @@
+services:
+  mf-db:
+    environment:
+    - MARIADB_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD}
+    expose:
+    - 3306/tcp
+    image: mariadb:11
+    networks:
+    - default
+    dns:
+    - 172.30.0.253
+    restart: unless-stopped
+    volumes:
+    - ./db:/var/lib/mysql
+    healthcheck:
+      interval: 10s
+      retries: 5
+      test:
+      - CMD-SHELL
+      - healthcheck.sh --connect --innodb_initialized
+      timeout: 5s
+  mf-app:
+    depends_on:
+    - mf-db
+    environment:
+    - WORDPRESS_DATABASE_HOST=${WORDPRESS_DATABASE_HOST}
+    - WORDPRESS_DATABASE_NAME=${WORDPRESS_DATABASE_USER}
+    - WORDPRESS_DATABASE_PASSWORD=${WORDPRESS_DATABASE_PASSWORD}
+    - WORDPRESS_DATABASE_USER=${WORDPRESS_DATABASE_USER}
+    expose:
+    - 8080/tcp
+    image: bitnami/wordpress:latest
+    networks:
+    - default
+    dns:
+    - 172.30.0.253
+    restart: unless-stopped
+    volumes:
+    - ./app:/bitnami/wordpress
+    healthcheck:
+      interval: 30s
+      retries: 3
+      start_period: 60s
+      test:
+      - CMD-SHELL
+      - curl -f http://localhost:8080/wp-login.php || exit 1
+      timeout: 15s

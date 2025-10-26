@@ -1,0 +1,10 @@
+enabled: true
+ingress:
+- service: instrukt-ai-qdrant
+  router: http
+  domain: qdrant.srv.instrukt.ai
+  port: 6333
+- service: instrukt-ai-web
+  router: http
+  domain: we.instrukt.ai
+  port: 3000

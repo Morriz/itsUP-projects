@@ -1,0 +1,10 @@
+enabled: true
+ingress:
+- service: n8n-qdrant
+  router: http
+  domain: n8n-qdrant.srv.instrukt.ai
+  port: 6333
+- service: n8n-app
+  router: http
+  domain: n8n.srv.instrukt.ai
+  port: 5678

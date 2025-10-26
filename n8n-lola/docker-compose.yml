@@ -1,0 +1,42 @@
+services:
+  n8n-lola-app:
+    environment:
+    - N8N_LOG_LEVEL=${N8N_LOG_LEVEL}
+    - ADMIN_EMAIL_ADDRESSES=${ADMIN_EMAIL_ADDRESSES}
+    - DB_SQLITE_POOL_SIZE=${DB_SQLITE_POOL_SIZE}
+    - DB_SQLITE_VACUUM_ON_STARTUP=${N8N_RUNNERS_ENABLED}
+    - EXECUTIONS_DATA_MAX_AGE=${EXECUTIONS_DATA_MAX_AGE}
+    - EXECUTIONS_DATA_PRUNE=${N8N_RUNNERS_ENABLED}
+    - EXECUTIONS_DATA_PRUNE_MAX_COUNT=${EXECUTIONS_DATA_PRUNE_MAX_COUNT}
+    - GENERIC_TIMEZONE=${TZ}
+    - N8N_BLOCK_ENV_ACCESS_IN_NODE=${N8N_SMTP_SSL}
+    - N8N_EDITOR_BASE_URL=${WEBHOOK_URL}
+    - N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=${N8N_SMTP_SSL}
+    - N8N_PROXY_HOPS=${N8N_PROXY_HOPS}
+    - N8N_RUNNERS_ENABLED=${N8N_RUNNERS_ENABLED}
+    - N8N_SMTP_HOST=${N8N_SMTP_HOST}
+    - N8N_SMTP_PASS=${N8N_SMTP_PASS}
+    - N8N_SMTP_PORT=${N8N_SMTP_PORT}
+    - N8N_SMTP_SENDER=${N8N_SMTP_SENDER}
+    - N8N_SMTP_SSL=${N8N_SMTP_SSL}
+    - N8N_SMTP_USER=${N8N_SMTP_USER}
+    - NODE_FUNCTION_ALLOW_EXTERNAL=${NODE_FUNCTION_ALLOW_EXTERNAL}
+    - SIGNING_KEY=${SIGNING_KEY}
+    - TZ=${TZ}
+    - WEBHOOK_URL=${WEBHOOK_URL}
+    expose:
+    - 5678/tcp
+    image: n8nio/n8n:next
+    dns:
+    - 172.30.0.253
+    restart: unless-stopped
+    volumes:
+    - ./n8n_data:/home/node/.n8n
+    healthcheck:
+      interval: 30s
+      retries: 3
+      start_period: 30s
+      test:
+      - CMD-SHELL
+      - wget -O/dev/null -q --timeout=10 http://localhost:5678/healthz
+      timeout: 15s

@@ -1,0 +1,6 @@
+enabled: true
+ingress:
+- service: ai-assistant-web
+  router: http
+  domain: utrecht.ai-assistent.app
+  port: 8080

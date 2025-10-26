@@ -1,0 +1,6 @@
+enabled: true
+ingress:
+- service: minio-app
+  router: http
+  domain: minio-ui.srv.instrukt.ai
+  port: 9001

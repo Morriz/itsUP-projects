@@ -1,0 +1,63 @@
+services:
+  planka-app:
+    depends_on:
+    - planka-db
+    environment:
+    - BASE_URL=${BASE_URL}
+    - DATABASE_URL=${DATABASE_URL}
+    - DEFAULT_ADMIN_EMAIL=${DEFAULT_ADMIN_EMAIL}
+    - DEFAULT_ADMIN_NAME=${DEFAULT_ADMIN_NAME}
+    - DEFAULT_ADMIN_PASSWORD=${DEFAULT_ADMIN_PASSWORD}
+    - DEFAULT_ADMIN_USERNAME=${DEFAULT_ADMIN_USERNAME}
+    - LOG_LEVEL=${LOG_LEVEL}
+    - SECRET_KEY=${SECRET_KEY}
+    - SMTP_FROM=${SMTP_FROM}
+    - SMTP_HOST=${SMTP_HOST}
+    - SMTP_NAME=${POSTGRES_DB}
+    - SMTP_PASSWORD=${SMTP_PASSWORD}
+    - SMTP_PORT=${SMTP_PORT}
+    - SMTP_SECURE=${SMTP_SECURE}
+    - SMTP_USER=${SMTP_USER}
+    - TRUST_PROXY=${TRUST_PROXY}
+    expose:
+    - 1337/tcp
+    image: ghcr.io/plankanban/planka:latest
+    networks:
+    - default
+    dns:
+    - 172.30.0.253
+    restart: unless-stopped
+    volumes:
+    - ./user-avatars:/app/public/user-avatars
+    - ./project-background-images:/app/public/project-background-images
+    - ./attachments:/app/private/attachments
+    - ./logs/:/app/logs
+    healthcheck:
+      interval: 20s
+      retries: 3
+      start_period: 30s
+      test:
+      - CMD-SHELL
+      - wget -O/dev/null -q --timeout=10 http://localhost:1337/
+      timeout: 15s
+  planka-db:
+    environment:
+    - POSTGRES_DB=${POSTGRES_DB}
+    - POSTGRES_HOST_AUTH_METHOD=${POSTGRES_HOST_AUTH_METHOD}
+    expose:
+    - 5432/tcp
+    image: postgres:16-alpine
+    networks:
+    - default
+    dns:
+    - 172.30.0.253
+    restart: unless-stopped
+    volumes:
+    - ./data:/var/lib/postgresql/data
+    healthcheck:
+      interval: 10s
+      retries: 5
+      test:
+      - CMD-SHELL
+      - pg_isready -U postgres -d planka
+      timeout: 5s

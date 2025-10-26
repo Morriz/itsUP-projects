@@ -1,0 +1,33 @@
+services:
+  morriz-indy-news-app:
+    environment:
+    - API_KEY=${API_KEY}
+    - COOKIE_SERVICE_API_KEY=${COOKIE_SERVICE_API_KEY}
+    - COOKIE_SERVICE_URL=${COOKIE_SERVICE_URL}
+    - COOKIE_SERVICE_CALLBACK_URL=${COOKIE_SERVICE_CALLBACK_URL}
+    - CACHE=${CACHE}
+    - LOG_LEVEL=${LOG_LEVEL}
+    - SVC_USERNAME=${SVC_USERNAME}
+    - SVC_EMAIL=${SVC_EMAIL}
+    - SVC_PASSWORD=${SVC_PASSWORD}
+    - EMAIL_PASSWORD=${EMAIL_PASSWORD}
+    - SVC_COOKIES=${SVC_COOKIES}
+    expose:
+    - 8080/tcp
+    image: morriz/indy-news:main
+    dns:
+    - 172.30.0.253
+    restart: unless-stopped
+    volumes:
+    - ./x:/x
+    healthcheck:
+      interval: 30s
+      retries: 3
+      start_period: 30s
+      test:
+      - CMD
+      - sh
+      - -c
+      - test ! -f /tmp/drain && python3 -c "import socket; s=socket.socket(); s.settimeout(5);
+        s.connect((\"localhost\",8080)); s.close()"
+      timeout: 15s
