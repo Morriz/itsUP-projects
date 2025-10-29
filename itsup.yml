@@ -22,5 +22,5 @@ backup:
 routerIP: 192.168.1.1 # Auto-detected on 2025-10-25
 
 versions:
-  traefik: v3.5.1
+  traefik: v3.5.4
   crowdsec: v1.7.3
