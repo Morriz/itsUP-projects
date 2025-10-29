@@ -1,2 +1,11 @@
 enabled: true
-ingress: []
+ingress:
+  - domain: vpn.srv.instrukt.ai
+    hostport: 1194
+    port: 1194
+    protocol: udp
+    router: udp
+  - domain: vpn.srv.instrukt.ai
+    hostport: 1194
+    port: 1194
+    router: tcp
