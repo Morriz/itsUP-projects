@@ -3,7 +3,4 @@ host: host.docker.internal
 ingress:
   - domain: itsup.srv.instrukt.ai
     port: 8888
-    router: tcp
-  - domain: itsup.srv.instrukt.ai
-    port: 8888
     router: http
