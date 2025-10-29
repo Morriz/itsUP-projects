@@ -1,6 +1,12 @@
 enabled: true
 ingress:
-- service: ai-chatbot-app
-  router: http
-  domain: auth.instrukt.ai
-  port: 3000
+  - service: ai-chatbot-app
+    router: http
+    port: 3000
+    tls:
+      main: auth.instrukt.ai
+      sans:
+        - maurice.instrukt.ai
+        - chemel.instrukt.ai
+        - storytrail.instrukt.ai
+        - indy-news.instrukt.ai

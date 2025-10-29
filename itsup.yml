@@ -4,9 +4,6 @@
 traefik:
   domain: traefik.srv.instrukt.ai # Dashboard domain (REQUIRED)
 
-# Domain suffix for TLS services (REQUIRED)
-domainSuffix: srv.instrukt.ai
-
 # Backup configuration (optional), can be added to cron:
 # 0 5 * * * cd /path/to/itsup && .venv/bin/python bin/backup.py
 backup:

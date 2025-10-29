@@ -45,7 +45,7 @@ services:
     environment:
       - LOG_LEVEL=${LOG_LEVEL}
       - POSTGRES_URL=${POSTGRES_URL}
-      - REDIS_URL=${REDIS_URL}
+      - REDIS_URL=redis://${REDIS_USER}:${REDIS_PASS}@${REDIS_HOST}:6379/1
     expose:
       - 8080/tcp
     image: morriz/ai-chatbot:main
@@ -75,7 +75,7 @@ services:
       - N8N_API_URL_SEND_MAURICE=${N8N_API_URL_SEND_MAURICE}
       - N8N_API_URL_SEND_STORYTRAIL=${N8N_API_URL_SEND_STORYTRAIL}
       - OPENAI_API_KEY=${OPENAI_API_KEY}
-      - POSTGRES_URL=${POSTGRES_URL}
+      - POSTGRES_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:5432/${POSTGRES_DB}
       - SMTP_KEY=${SMTP_KEY}
       - TENANT_AUTH_INDY_NEWS=${TENANT_AUTH_INDY_NEWS}
     expose:
