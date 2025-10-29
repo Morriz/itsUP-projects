@@ -1,9 +1,16 @@
 # itsUP minimal config
 
+# Traefik dashboard configuration
+traefik:
+  domain: traefik.srv.instrukt.ai # Dashboard domain (REQUIRED)
+
+# Domain suffix for TLS services (REQUIRED)
+domainSuffix: srv.instrukt.ai
+
 # Backup configuration (optional), can be added to cron:
 # 0 5 * * * cd /path/to/itsup && .venv/bin/python bin/backup.py
 backup:
-  exclude: [] # project names to exclude from backup
+  exclude: [komga] # project names to exclude from backup
   s3:
     host: ${AWS_S3_HOST} # from secrets
     region: ${AWS_S3_REGION} # from secrets
@@ -15,5 +22,5 @@ backup:
 routerIP: 192.168.1.1 # Auto-detected on 2025-10-25
 
 versions:
-  traefik: v3.2
-  crowdsec: v1.6.8
+  traefik: v3.51
+  crowdsec: v1.7.3

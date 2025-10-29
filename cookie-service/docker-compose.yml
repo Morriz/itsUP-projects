@@ -1,21 +1,19 @@
 services:
   cookie-service-api:
     environment:
-    - API_KEY=${API_KEY}
-    - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - API_KEY=${API_KEY}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
     expose:
-    - 8080/tcp
+      - 8080/tcp
     image: morriz/cookie-service:main
-    dns:
-    - 172.30.0.253
     restart: unless-stopped
     volumes:
-    - ./browser_profile:/app/browser_profile
+      - ./browser_profile:/app/browser_profile
     healthcheck:
       interval: 30s
       retries: 3
       start_period: 30s
       test:
-      - CMD-SHELL
-      - curl -f http://localhost:8080/health || exit 1
+        - CMD-SHELL
+        - curl -f http://localhost:8080/health || exit 1
       timeout: 15s

@@ -1,43 +1,41 @@
 services:
   mailforwarder-mailserver:
     environment:
-    - DEBUG=${DEBUG}
-    - SMF_CONFIG=${SMF_CONFIG}
+      # - DEBUG=*
+      - SMF_CONFIG=${SMF_CONFIG}
     image: morriz/mailforwarder:latest
     networks:
-    - default
+      - default
     dns:
-    - 172.30.0.253
+      - 172.30.0.253
     restart: unless-stopped
     volumes:
-    - ./dkim:/var/db/dkim
-    - ./mail:/var/mail
-    - ../../certs/mail.srv.instrukt.ai/fullchain.pem:/etc/postfix/cert/smtp.ec.cert:ro
-    - ../../certs/mail.srv.instrukt.ai/privkey.pem:/etc/postfix/cert/smtp.ec.key:ro
+      - ./dkim:/var/db/dkim
+      - ./mail:/var/mail
+      - ../../certs/mail.srv.instrukt.ai/fullchain.pem:/etc/postfix/cert/smtp.ec.cert:ro
+      - ../../certs/mail.srv.instrukt.ai/privkey.pem:/etc/postfix/cert/smtp.ec.key:ro
     expose:
-    - 25/tcp
+      - 25/tcp
     healthcheck:
       interval: 60s
       retries: 3
       test:
-      - CMD-SHELL
-      - timeout 5 sh -c 'nc -z localhost 25'
+        - CMD-SHELL
+        - timeout 5 sh -c 'nc -z localhost 25'
       timeout: 10s
     ports:
-    - 25:25/tcp
+      - 25:25/tcp
   mailforwarder-dummy:
     expose:
-    - 8080/tcp
+      - 8080/tcp
     image: nginxinc/nginx-unprivileged:stable
     networks:
-    - default
-    dns:
-    - 172.30.0.253
+      - default
     restart: unless-stopped
     healthcheck:
       interval: 30s
       retries: 3
       test:
-      - CMD-SHELL
-      - test ! -f /tmp/drain && curl -f http://localhost:8080/ || exit 1
+        - CMD-SHELL
+        - test ! -f /tmp/drain && curl -f http://localhost:8080/ || exit 1
       timeout: 10s

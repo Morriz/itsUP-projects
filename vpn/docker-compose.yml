@@ -1,22 +1,20 @@
 services:
   vpn-openvpn:
     environment:
-    - DEBUG=${DEBUG}
+      - DEBUG=${DEBUG}
     expose:
-    - 1194/udp
-    - 1194/tcp
+      - 1194/udp
+      - 1194/tcp
     image: nubacuk/docker-openvpn:aarch64
-    dns:
-    - 172.30.0.253
     restart: always
     volumes:
-    - ./etc/openvpn:/etc/openvpn
+      - ./etc/openvpn:/etc/openvpn
     cap_add:
-    - NET_ADMIN
+      - NET_ADMIN
     healthcheck:
       interval: 30s
       retries: 3
       test:
-      - CMD-SHELL
-      - pgrep openvpn
+        - CMD-SHELL
+        - pgrep openvpn
       timeout: 10s

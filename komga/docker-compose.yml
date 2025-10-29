@@ -1,20 +1,18 @@
 services:
   komga-app:
     expose:
-    - 25600/tcp
+      - 25600/tcp
     image: gotson/komga:latest
-    dns:
-    - 172.30.0.253
     restart: unless-stopped
     volumes:
-    - ./config:/config
-    - ./data:/data
-    - /etc/timezone:/etc/timezone:ro
+      - ./config:/config
+      - ./data:/data
+      - /etc/timezone:/etc/timezone:ro
     healthcheck:
       interval: 30s
       retries: 3
       start_period: 40s
       test:
-      - CMD-SHELL
-      - wget -O/dev/null -q --timeout=10 http://localhost:25600/
+        - CMD-SHELL
+        - wget -O/dev/null -q --timeout=10 http://localhost:25600/
       timeout: 15s

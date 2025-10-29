@@ -1,58 +1,58 @@
 services:
   n8n-qdrant:
     environment:
-    - QDRANT__SERVICE__API_KEY=${QDRANT__SERVICE__API_KEY}
+      - QDRANT__SERVICE__API_KEY=${QDRANT__SERVICE__API_KEY}
     expose:
-    - 6333/tcp
+      - 6333/tcp
     image: qdrant/qdrant:v1.15-unprivileged
     networks:
-    - default
-    dns:
-    - 172.30.0.253
+      - default
     restart: unless-stopped
     volumes:
-    - ./qdrant/storage:/qdrant/storage
+      - ./qdrant/storage:/qdrant/storage
     healthcheck:
       interval: 10s
       retries: 5
       test:
-      - CMD-SHELL
-      - bash -c ':</dev/tcp/127.0.0.1/6333' || exit 1
+        - CMD-SHELL
+        - bash -c ':</dev/tcp/127.0.0.1/6333' || exit 1
       timeout: 5s
     mem_limit: 450m
   n8n-app:
     environment:
-    - ADMIN_EMAIL_ADDRESSES=${ADMIN_EMAIL_ADDRESSES}
-    - DB_SQLITE_VACUUM_ON_STARTUP=${EXECUTIONS_DATA_PRUNE}
-    - EXECUTIONS_DATA_MAX_AGE=${EXECUTIONS_DATA_MAX_AGE}
-    - EXECUTIONS_DATA_PRUNE=${EXECUTIONS_DATA_PRUNE}
-    - EXECUTIONS_DATA_PRUNE_MAX_COUNT=${EXECUTIONS_DATA_PRUNE_MAX_COUNT}
-    - GENERIC_TIMEZONE=${TZ}
-    - N8N_EDITOR_BASE_URL=${WEBHOOK_URL}
-    - N8N_PROXY_HOPS=${N8N_PROXY_HOPS}
-    - N8N_SMTP_HOST=${N8N_SMTP_HOST}
-    - N8N_SMTP_PASS=${N8N_SMTP_PASS}
-    - N8N_SMTP_PORT=${N8N_SMTP_PORT}
-    - N8N_SMTP_SENDER=${N8N_SMTP_SENDER}
-    - N8N_SMTP_SSL=${N8N_SMTP_SSL}
-    - N8N_SMTP_USER=${N8N_SMTP_USER}
-    - TZ=${TZ}
-    - WEBHOOK_URL=${WEBHOOK_URL}
+      - ADMIN_EMAIL_ADDRESSES=${ADMIN_EMAIL_ADDRESSES}
+      - DB_SQLITE_POOL_SIZE=4
+      - DB_SQLITE_VACUUM_ON_STARTUP=true
+      - EXECUTIONS_DATA_MAX_AGE=1440
+      - EXECUTIONS_DATA_PRUNE=true
+      - EXECUTIONS_DATA_PRUNE_MAX_COUNT=1000000
+      - GENERIC_TIMEZONE=${TZ}
+      - N8N_BLOCK_ENV_ACCESS_IN_NODE=False
+      - N8N_EDITOR_BASE_URL=${WEBHOOK_URL}
+      - N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=False
+      # - N8N_LOG_LEVEL=debug
+      - N8N_PROXY_HOPS=1
+      - N8N_RUNNERS_ENABLED=true
+      - N8N_SMTP_HOST=${N8N_SMTP_HOST}
+      - N8N_SMTP_PASS=${N8N_SMTP_PASS}
+      - N8N_SMTP_PORT=${N8N_SMTP_PORT}
+      - N8N_SMTP_SENDER=${N8N_SMTP_SENDER}
+      - N8N_SMTP_SSL=${N8N_SMTP_SSL}
+      - N8N_SMTP_USER=${N8N_SMTP_USER}
+      - NODE_FUNCTION_ALLOW_EXTERNAL=''
     expose:
-    - 5678/tcp
+      - 5678/tcp
     image: n8nio/n8n:next
     networks:
-    - default
-    dns:
-    - 172.30.0.253
+      - default
     restart: unless-stopped
     volumes:
-    - ./n8n_data:/home/node/.n8n
+      - ./n8n_data:/home/node/.n8n
     healthcheck:
       interval: 30s
       retries: 3
       start_period: 30s
       test:
-      - CMD-SHELL
-      - wget -O/dev/null -q --timeout=10 http://localhost:5678/healthz
+        - CMD-SHELL
+        - wget -O/dev/null -q --timeout=10 http://localhost:5678/healthz
       timeout: 15s
