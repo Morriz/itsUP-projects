@@ -20,14 +20,9 @@ services:
     image: morriz/ai-assistant:main
     restart: unless-stopped
     healthcheck:
+      test: wget -O/dev/null -q http://localhost:8080/chatapi/health
       interval: 1m
-      retries: 3
-      start_interval: 1s
-      start_period: 10s
-      test:
-        - CMD
-        - sh
-        - -c
-        - 'test ! -f /tmp/drain && node -e "require(''http'').get(''http://localhost:8080'',
-          (r) => process.exit(r.statusCode === 200 ? 0 : 1)).on(''error'', () => process.exit(1))"'
       timeout: 5s
+      retries: 3
+      start_period: 10s
+      start_interval: 1s
