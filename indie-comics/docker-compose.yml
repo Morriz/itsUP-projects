@@ -6,7 +6,6 @@ services:
       - API_KEY=${API_KEY}
       - AUTH_TRUST_HOST=${AUTH_TRUST_HOST}
       - DATABASE_URL=${DATABASE_URL}
-      - debug=${debug}
       - EMAIL_FROM=${EMAIL_FROM}
       - EMAIL_REPLYTO=${EMAIL_REPLYTO}
       # - LOG_LEVEL=debug
