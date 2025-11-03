@@ -1,0 +1,7 @@
+services:
+  whoami-web:
+    environment: null
+    expose:
+    - 80/tcp
+    image: traefik/whoami:latest
+    restart: unless-stopped

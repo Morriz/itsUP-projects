@@ -1,0 +1,25 @@
+services:
+  test-master:
+    environment:
+    - INFORMANT=${INFORMANT}
+    - TARGET=cost concerned people
+    expose:
+    - 8080/tcp
+    image: morriz/hello-world:main
+    networks:
+    - default
+    restart: unless-stopped
+    volumes:
+    - ./data/bla:/data/bla
+    - ./etc/dida:/etc/dida
+  test-informant:
+    environment:
+    - TARGET=${TARGET}
+    - TESTIE=${TEST}
+    expose:
+    - 8080/tcp
+    image: morriz/hello-world:main
+    networks:
+    - default
+    restart: unless-stopped
+    cpus: 0.1

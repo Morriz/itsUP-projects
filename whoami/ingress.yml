@@ -1,0 +1,6 @@
+enabled: true
+ingress:
+- service: whoami-web
+  router: http
+  domain: whoami.srv.instrukt.ai
+  port: 80

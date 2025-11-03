@@ -1,6 +1,8 @@
 enabled: true
 ingress:
-- service: n8n-lola-app
-  router: http
-  domain: n8n-lola.srv.instrukt.ai
-  port: 5678
+  - service: n8n-lola-app
+    router: http
+    domain: n8n-lola.srv.instrukt.ai
+    port: 5678
+egress:
+  - ai-chatbot:redis

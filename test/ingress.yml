@@ -1,0 +1,6 @@
+enabled: true
+ingress:
+- service: test-master
+  router: http
+  domain: hello.srv.instrukt.ai
+  port: 8080
