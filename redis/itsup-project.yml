@@ -1,0 +1,8 @@
+enabled: true
+ingress:
+  - service: redis-server
+    router: tcp
+    domain: redis.srv.instrukt.ai
+    port: 6379
+    hostport: 6379
+    proxyprotocol: null

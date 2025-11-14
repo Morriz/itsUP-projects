@@ -44,7 +44,7 @@ services:
     command: node ws/websocket.js
     environment:
       - LOG_LEVEL=${LOG_LEVEL}
-      - POSTGRES_URL=${POSTGRES_URL}
+      - POSTGRES_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:5432/${POSTGRES_DB}
       - REDIS_URL=redis://${REDIS_USER}:${REDIS_PASS}@${REDIS_HOST}:6379/1
     expose:
       - 8080/tcp

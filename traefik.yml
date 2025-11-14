@@ -3,8 +3,8 @@
 # Edit values below, then commit to git
 # Secrets referenced as ${VAR} - deployment injects live values
 
-# log:
-#   level: INFO # DEBUG, INFO, WARN, ERROR
+log:
+  level: DEBUG #, INFO, WARN, ERROR
 
 # experimental:
 #   plugins:

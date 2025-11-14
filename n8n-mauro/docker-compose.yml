@@ -1,36 +1,16 @@
 services:
-  n8n-4h-qdrant:
+  n8n-mauro-app:
     environment:
-      - QDRANT__SERVICE__API_KEY=${QDRANT__SERVICE__API_KEY}
-    expose:
-      - 6333/tcp
-    image: qdrant/qdrant:v1.15-unprivileged
-    networks:
-      - default
-    restart: unless-stopped
-    volumes:
-      - ./qdrant/storage:/qdrant/storage
-    healthcheck:
-      interval: 10s
-      retries: 5
-      test:
-        - CMD-SHELL
-        - bash -c ':</dev/tcp/127.0.0.1/6333' || exit 1
-      timeout: 5s
-    mem_limit: 450m
-  n8n-4h-app:
-    environment:
-      - ADMIN_EMAIL_ADDRESSES=${ADMIN_EMAIL_ADDRESSES}
       - DB_SQLITE_POOL_SIZE=4
       - DB_SQLITE_VACUUM_ON_STARTUP=true
       - EXECUTIONS_DATA_MAX_AGE=720
       - EXECUTIONS_DATA_PRUNE=true
-      - EXECUTIONS_DATA_PRUNE_MAX_COUNT=50000
+      - EXECUTIONS_DATA_PRUNE_MAX_COUNT=10000
       - GENERIC_TIMEZONE=Europe/Amsterdam
       - N8N_BLOCK_ENV_ACCESS_IN_NODE=False
       - N8N_EDITOR_BASE_URL=${N8N_EDITOR_BASE_URL}
       - N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=False
-      - N8N_LOG_LEVEL=debug
+      # - N8N_LOG_LEVEL=debug
       - N8N_PROXY_HOPS=1
       - N8N_RUNNERS_ENABLED=true
       - N8N_SMTP_HOST=${N8N_SMTP_HOST}
@@ -43,8 +23,6 @@ services:
     expose:
       - 5678/tcp
     image: n8nio/n8n:next
-    networks:
-      - default
     restart: unless-stopped
     volumes:
       - ./n8n_data:/home/node/.n8n

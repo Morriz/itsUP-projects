@@ -19,14 +19,15 @@ crowdsec:
   enabled: true
   apikey: '${CROWDSEC_APIKEY}'
   collections:
-    - crowdsecurity/linux
-    - crowdsecurity/traefik
-    - crowdsecurity/http-cve
-    - crowdsecurity/sshd
-    - crowdsecurity/whitelist-good-actors
-    - crowdsecurity/appsec-virtual-patching
+  - crowdsecurity/linux
+  - crowdsecurity/traefik
+  - crowdsecurity/http-cve
+  - crowdsecurity/sshd
+  - crowdsecurity/whitelist-good-actors
+  - crowdsecurity/appsec-virtual-patching
 
 # Component versions
 versions:
   traefik: v3.5.4
   crowdsec: v1.7.3
+schemaVersion: 2.1.0
