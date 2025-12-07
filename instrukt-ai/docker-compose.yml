@@ -36,7 +36,7 @@ services:
       retries: 5
       test:
         - CMD-SHELL
-        - pg_isready -U postgres
+        - pg_isready -U ${PG_DBUSER}
       timeout: 5s
   instrukt-ai-redis:
     command:
@@ -113,11 +113,11 @@ services:
       - APP_AWS_REGION=${APP_AWS_REGION}
       - APP_AWS_SECRET_KEY=${APP_AWS_SECRET_KEY}
       - CONCURRENCY=${CONCURRENCY}
-      - DATABASE_URL=${DATABASE_URL}
+      - DATABASE_URL=postgresql://${PG_DBUSER}:${PG_DBPASS}@${PG_HOST}:5432/${PG_DB}
       - OPENAI_API_KEY=${OPENAI_API_KEY}
       - QDRANT_API_KEY=${QDRANT_API_KEY}
       - QDRANT_API_URL=${QDRANT_API_URL}
-      - REDIS_URL=${REDIS_URL}
+      - REDIS_URL=redis://${REDIS_USER}:${REDIS_PASS}@${REDIS_HOST}:6379
       - WORKER_ROLE=${WORKER_ROLE}
     image: morriz/instrukt-ai:main
     networks:
