@@ -20,7 +20,11 @@ services:
       - SENTRY_AUTH_TOKEN=${SENTRY_AUTH_TOKEN}
       - SMTP_HOST=${SMTP_HOST}
       - SMTP_KEY=${SMTP_KEY}
-      -
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - AWS_S3_HOST=${AWS_S3_HOST}
+      - AWS_S3_REGION=${AWS_REGION}
+      - AWS_S3_BUCKET=${S3_BUCKET_NAME}
     expose:
       - 3000/tcp
     image: morriz/indie-comics:main
