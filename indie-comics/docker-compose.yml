@@ -20,6 +20,7 @@ services:
       - SENTRY_AUTH_TOKEN=${SENTRY_AUTH_TOKEN}
       - SMTP_HOST=${SMTP_HOST}
       - SMTP_KEY=${SMTP_KEY}
+      -
     expose:
       - 3000/tcp
     image: morriz/indie-comics:main
@@ -39,6 +40,31 @@ services:
         - 'node -e "require(''http'').get(''http://localhost:3000'', (r) => process.exit(r.statusCode
           === 200 ? 0 : 1)).on(''error'', () => process.exit(1))"'
       timeout: 15s
+  indie-comics-worker:
+    depends_on:
+      indie-comics-db:
+        condition: service_healthy
+      indie-comics-redis:
+        condition: service_healthy
+    environment:
+      - RUN_MODE=worker
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - DATABASE_URL=postgresql://$POSTGRES_USER:$POSTGRES_PASSWORD@$POSTGRES_HOST:5432/$POSTGRES_DB?sslmode=disable
+      # - LOG_LEVEL=debug
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - REDIS_URL=redis://${REDIS_USER}:${REDIS_PASS}@${REDIS_HOST}:6379/0
+      - SENTRY_AUTH_TOKEN=${SENTRY_AUTH_TOKEN}
+      - SMTP_HOST=${SMTP_HOST}
+      - SMTP_KEY=${SMTP_KEY}
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - AWS_S3_HOST=${AWS_S3_HOST}
+      - AWS_S3_REGION=${AWS_REGION}
+      - AWS_S3_BUCKET=${S3_BUCKET_NAME}
+    image: morriz/indie-comics:main
+    networks:
+      - default
+    restart: unless-stopped
   indie-comics-db:
     environment:
       - POSTGRES_DB=${POSTGRES_DB}
