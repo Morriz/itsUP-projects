@@ -1,5 +1,5 @@
 services:
-  morriz-indy-comics-app:
+  indy-comics-app:
     expose:
       - 8000/tcp
     image: morriz/indy-comics:main

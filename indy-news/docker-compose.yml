@@ -1,5 +1,5 @@
 services:
-  morriz-indy-news-app:
+  indy-news-app:
     environment:
       - API_KEY=${API_KEY}
       - COOKIE_SERVICE_API_KEY=${COOKIE_SERVICE_API_KEY}
