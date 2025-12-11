@@ -1,6 +1,6 @@
 enabled: true
 ingress:
-- service: morriz-indy-comics-app
+- service: indy-comics-app
   router: http
   domain: indy-comics.instrukt.ai
   port: 8000

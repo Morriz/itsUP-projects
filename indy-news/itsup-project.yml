@@ -1,6 +1,6 @@
 enabled: true
 ingress:
-- service: morriz-indy-news-app
+- service: indy-news-app
   router: http
   domain: indy-news.srv.instrukt.ai
   port: 8080

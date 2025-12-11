@@ -1,5 +1,5 @@
 enabled: true
-host: host.docker.internal
+host: 127.0.0.1
 ingress:
   - domain: itsup.srv.instrukt.ai
     port: 8888
