@@ -7,7 +7,8 @@ ingress:
   - service: instrukt-ai-web
     router: http
     tls:
-      main: app.instrukt.ai
+      main: instrukt.ai
       sans:
+        - app.instrukt.ai
         - we.instrukt.ai
     port: 3000
