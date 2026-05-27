@@ -52,6 +52,14 @@ services:
     networks:
       - default
     restart: unless-stopped
+    healthcheck:
+      interval: 30s
+      retries: 3
+      start_period: 10s
+      test:
+        - CMD-SHELL
+        - "test ! -f /tmp/drain && tr '\\0' ' ' < /proc/1/cmdline | grep -q 'node ws/websocket.js'"
+      timeout: 5s
   ai-chatbot-app:
     depends_on:
       - ai-chatbot-postgres

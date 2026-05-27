@@ -12,6 +12,14 @@ services:
     volumes:
     - ./data/bla:/data/bla
     - ./etc/dida:/etc/dida
+    healthcheck:
+      interval: 30s
+      retries: 3
+      start_period: 10s
+      test:
+      - CMD-SHELL
+      - wget -q -O /dev/null http://localhost:8080/ || exit 1
+      timeout: 5s
   test-informant:
     environment:
     - TARGET=${TARGET}
@@ -23,3 +31,11 @@ services:
     - default
     restart: unless-stopped
     cpus: 0.1
+    healthcheck:
+      interval: 30s
+      retries: 3
+      start_period: 10s
+      test:
+      - CMD-SHELL
+      - wget -q -O /dev/null http://localhost:8080/ || exit 1
+      timeout: 5s

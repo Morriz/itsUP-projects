@@ -20,11 +20,11 @@ services:
       - SENTRY_AUTH_TOKEN=${SENTRY_AUTH_TOKEN}
       - SMTP_HOST=${SMTP_HOST}
       - SMTP_KEY=${SMTP_KEY}
+      - AWS_REGION=${AWS_REGION}
       - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
       - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
-      - AWS_S3_HOST=${AWS_S3_HOST}
-      - AWS_S3_REGION=${AWS_REGION}
-      - AWS_S3_BUCKET=${S3_BUCKET_NAME}
+      - AWS_S3_ENDPOINT=${AWS_S3_HOST}
+      - AWS_S3_BUCKET_NAME=${AWS_S3_BUCKET}
     expose:
       - 3000/tcp
     image: morriz/indie-comics:main
@@ -60,15 +60,25 @@ services:
       - SENTRY_AUTH_TOKEN=${SENTRY_AUTH_TOKEN}
       - SMTP_HOST=${SMTP_HOST}
       - SMTP_KEY=${SMTP_KEY}
+      - AWS_REGION=${AWS_REGION}
       - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
       - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
-      - AWS_S3_HOST=${AWS_S3_HOST}
-      - AWS_S3_REGION=${AWS_REGION}
-      - AWS_S3_BUCKET=${S3_BUCKET_NAME}
+      - AWS_S3_ENDPOINT=${AWS_S3_HOST}
+      - AWS_S3_BUCKET_NAME=${AWS_S3_BUCKET}
     image: morriz/indie-comics:main
     networks:
       - default
     restart: unless-stopped
+    healthcheck:
+      interval: 30s
+      retries: 3
+      start_period: 10s
+      test:
+        - CMD
+        - node
+        - -e
+        - "const net=require('net');const targets=[];if(process.env.REDIS_URL){const u=new URL(process.env.REDIS_URL);targets.push([u.hostname,Number(u.port)||6379]);}if(process.env.DATABASE_URL){const u=new URL(process.env.DATABASE_URL);targets.push([u.hostname,Number(u.port)||5432]);}if(!targets.length){process.exit(0);}let i=0;const check=()=>{if(i>=targets.length)return process.exit(0);const t=targets[i++];const s=net.connect(t[1],t[0]);s.on('connect',()=>{s.destroy();check();});s.on('error',()=>process.exit(1));};check();"
+      timeout: 5s
   indie-comics-db:
     environment:
       - POSTGRES_DB=${POSTGRES_DB}

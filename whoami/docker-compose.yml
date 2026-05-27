@@ -1,6 +1,0 @@
-services:
-  whoami-web:
-    expose:
-    - 80/tcp
-    image: traefik/whoami:latest
-    restart: unless-stopped

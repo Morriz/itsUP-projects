@@ -61,6 +61,7 @@ services:
     depends_on:
       - instrukt-ai-redis
     environment:
+      - LOG_LEVEL=DEBUG
       - ANALYZE=${ANALYZE}
       - APP_AWS_ACCESS_KEY=${APP_AWS_ACCESS_KEY}
       - APP_AWS_REGION=${APP_AWS_REGION}

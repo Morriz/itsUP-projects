@@ -26,6 +26,5 @@ services:
         - CMD
         - sh
         - -c
-        - test ! -f /tmp/drain && python3 -c "import socket; s=socket.socket(); s.settimeout(5);
-          s.connect((\"localhost\",8080)); s.close()"
+        - test ! -f /tmp/drain && python3 -c "import urllib.request; urllib.request.urlopen('http://localhost:8080/privacy', timeout=5)"
       timeout: 15s
