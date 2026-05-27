@@ -91,6 +91,10 @@ services:
     expose:
       - 3000/tcp
     image: morriz/instrukt-ai:main
+    labels:
+      - traefik.enable=true
+      - traefik.http.middlewares.instruk-ai-redirect.redirectregex.regex=^https://instrukt.ai(.*)
+      - traefik.http.middlewares.instruk-ai-redirect.redirectregex.replacement=https://we.instrukt.ai$$1
     networks:
       - default
     restart: unless-stopped
