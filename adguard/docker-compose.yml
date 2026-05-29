@@ -1,9 +1,12 @@
 services:
   adguard-app:
     image: adguard/adguardhome
-    # No host ports: host :53 is owned by the existing DNS container. AdGuard runs
-    # only on proxynet (pinned to 172.20.0.252 via ingress). The honeypot forwards
-    # to 172.20.0.252:53, and Traefik serves the web UI from 172.20.0.252:80.
+    # DNS is published on the LAN IP so the router/LAN/fan can use this Pi as a
+    # resolver; the web UI is served via Traefik on proxynet. The host dnsmasq is
+    # pinned to lo/docker0 (bind-interfaces), leaving 192.168.1.30:53 free for us.
+    ports:
+      - "192.168.1.30:53:53/tcp"
+      - "192.168.1.30:53:53/udp"
     # Hardening: drop every Linux capability except binding low ports (53/80),
     # forbid privilege escalation, and run with a read-only root + tmpfs scratch.
     cap_drop:
