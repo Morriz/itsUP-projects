@@ -1,0 +1,6 @@
+enabled: true
+ingress:
+  - service: adguard-app
+    router: http
+    port: 8080
+    domain: adguard.srv.instrukt.ai
