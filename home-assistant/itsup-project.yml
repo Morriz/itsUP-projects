@@ -5,6 +5,7 @@ ingress:
     passthrough: true
     port: 443
     router: tcp
+    proxyprotocol: 2
   - domain: home.idiotz.nl
     path_prefix: /.well-known/acme-challenge/
     port: 80
