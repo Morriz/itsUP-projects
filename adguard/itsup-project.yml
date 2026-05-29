@@ -2,7 +2,7 @@ enabled: true
 ingress:
   - service: adguard-app
     router: http
-    port: 80
+    port: 8080
     domain: adguard.srv.instrukt.ai
     ipv4_address: 172.20.0.252
     dns:
