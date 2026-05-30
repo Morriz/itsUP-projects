@@ -1,0 +1,13 @@
+services:
+  mosquitto:
+    image: eclipse-mosquitto:2
+    restart: unless-stopped
+    volumes:
+      - ./config:/mosquitto/config:ro
+      - ./certs:/mosquitto/certs:ro
+    networks:
+      - proxynet
+
+networks:
+  proxynet:
+    external: true

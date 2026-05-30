@@ -1,0 +1,12 @@
+enabled: true
+# Tiny Mosquitto container that accepts the fan's anonymous TLS connection and
+# bridges fan topics into the HA Mosquitto with proper credentials.
+ingress:
+  - service: mosquitto
+    router: tcp
+    port: 8883             # tiny mosquitto's TLS listener (inside container)
+    hostport: 443          # what the fan dials; creates a Traefik entrypoint on :443
+    domain: collector3.cloudgarden.nl
+    passthrough: true
+    proxyprotocol: null
+    ipv4_address: 172.20.0.251   # pins the container so Traefik can dial it by IP
