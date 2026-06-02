@@ -1,6 +1,9 @@
 services:
   adguard-app:
     image: adguard/adguardhome
+    # Auto-restart on docker daemon start so reboot doesn't depend on the bringup
+    # service succeeding (which itself needs DNS — i.e., AdGuard — to be alive).
+    restart: unless-stopped
     # DNS is published on the LAN IP so the router/LAN/fan can use this Pi as a
     # resolver; the web UI is served via Traefik on proxynet. The host dnsmasq is
     # pinned to lo/docker0 (bind-interfaces), leaving 192.168.1.30:53 free for us.
