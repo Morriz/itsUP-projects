@@ -27,7 +27,10 @@ services:
       - WORDPRESS_DATABASE_USER=${WORDPRESS_DATABASE_USER}
     expose:
       - 8080/tcp
-    image: bitnami/wordpress:latest
+    # Pinned: Bitnami 7.0.0 (2026-05-21) added a mandatory WORDPRESS_PASSWORD
+    # validation that breaks startup for sites without it set. 6.9.4 is the
+    # last 6.x; the existing site has been running on this line for years.
+    image: bitnami/wordpress:6.9.4
     networks:
       - default
     restart: unless-stopped
