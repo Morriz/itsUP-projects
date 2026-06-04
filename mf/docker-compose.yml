@@ -25,13 +25,13 @@ services:
       - WORDPRESS_DATABASE_NAME=${WORDPRESS_DATABASE_USER}
       - WORDPRESS_DATABASE_PASSWORD=${WORDPRESS_DATABASE_PASSWORD}
       - WORDPRESS_DATABASE_USER=${WORDPRESS_DATABASE_USER}
-      - WORDPRESS_PASSWORD=bla
+      # Existing install: skip the Bitnami first-time bootstrap (which would
+      # otherwise demand WORDPRESS_PASSWORD/USERNAME/EMAIL just to validate
+      # creating an admin user that's already in the DB).
+      - WORDPRESS_SKIP_BOOTSTRAP=yes
     expose:
       - 8080/tcp
-    # Pinned: Bitnami 7.0.0 (2026-05-21) added a mandatory WORDPRESS_PASSWORD
-    # validation that breaks startup for sites without it set. 6.9.4 is the
-    # last 6.x; the existing site has been running on this line for years.
-    image: bitnami/wordpress:6.9.4
+    image: bitnami/wordpress:latest
     networks:
       - default
     restart: unless-stopped
