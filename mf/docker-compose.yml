@@ -29,6 +29,7 @@ services:
       # otherwise demand WORDPRESS_PASSWORD/USERNAME/EMAIL just to validate
       # creating an admin user that's already in the DB).
       - WORDPRESS_SKIP_BOOTSTRAP=yes
+      - WORDPRESS_PASSWORD=bla
     expose:
       - 8080/tcp
     image: bitnami/wordpress:latest
