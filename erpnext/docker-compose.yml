@@ -104,7 +104,11 @@ services:
           fi
         done;
         echo "sites/common_site_config.json found";
-        bench new-site --mariadb-user-host-login-scope='%' --admin-password=$$ADMIN_PASSWORD --db-root-username=root --db-root-password=$$DB_ROOT_PASSWORD --install-app erpnext --set-default frontend;
+        if [ -d "sites/frontend" ]; then
+          echo "site 'frontend' already exists - skipping create (idempotent re-apply)";
+        else
+          bench new-site --mariadb-user-host-login-scope='%' --admin-password=$$ADMIN_PASSWORD --db-root-username=root --db-root-password=$$DB_ROOT_PASSWORD --install-app erpnext --set-default frontend;
+        fi;
     environment:
       - ADMIN_PASSWORD=${ADMIN_PASSWORD}
       - DB_ROOT_PASSWORD=${DB_ROOT_PASSWORD}
