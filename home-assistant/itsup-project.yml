@@ -6,9 +6,7 @@ ingress:
     port: 443
     router: tcp
     proxyprotocol: '2'
-  - domain: home.idiotz.nl
-    passthrough: true
-    port: 8122
+  - port: 8122
     router: tcp
     # proxyprotocol: '2'
   - domain: home.idiotz.nl
