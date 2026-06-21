@@ -5,6 +5,13 @@ services:
       - 1194/tcp
     image: nubacuk/docker-openvpn:aarch64
     restart: always
+    environment:
+      # Issue the CA and leaf certs with a 10-year lifetime (days) instead of
+      # EasyRSA's ~825-day default, so VPN/deploy access does not expire every
+      # ~2 years. Read by ovpn_initpki (CA + server cert) and
+      # easyrsa build-client-full (client cert).
+      EASYRSA_CA_EXPIRE: "3650"
+      EASYRSA_CERT_EXPIRE: "3650"
     volumes:
       - ./etc/openvpn:/etc/openvpn
     cap_add:

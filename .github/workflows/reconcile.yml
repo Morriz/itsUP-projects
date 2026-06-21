@@ -1,0 +1,12 @@
+name: Reconcile itsUP
+
+# On any commit to main, trigger a full-stack reconcile on the host:
+# itsUP pulls the projects + secrets repos and runs `itsup apply`.
+on:
+  push:
+    branches: [main]
+
+jobs:
+  reconcile:
+    uses: Morriz/itsUP/.github/workflows/reconcile.yml@main
+    secrets: inherit
