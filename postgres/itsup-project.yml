@@ -1,0 +1,8 @@
+enabled: true
+ingress:
+  - service: postgres
+    router: tcp
+    domain: postgres.srv.instrukt.ai
+    port: 5432
+    hostport: 5432
+    proxyprotocol: null

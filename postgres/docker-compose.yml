@@ -1,0 +1,32 @@
+services:
+  postgres:
+    image: pgvector/pgvector:pg18
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=${PG_USER}
+      - POSTGRES_PASSWORD=${PG_PASSWORD}
+      - POSTGRES_DB=${PG_DB}
+      # Pin PGDATA to a subdir so the PG18 volume-layout change cannot bite us.
+      - PGDATA=/var/lib/postgresql/data/pgdata
+      # initdb-ONLY, irreversible after first boot: data checksums + a
+      # version-stable builtin C.UTF-8 collation (immune to libc/ICU upgrade drift).
+      - POSTGRES_INITDB_ARGS=--data-checksums --locale-provider=builtin --builtin-locale=C.UTF-8 --encoding=UTF8
+      # Declarative user provisioning, reconciled on every start (see provision/).
+      - PG_PROVISION=${PG_PROVISION:-}
+    expose:
+      - 5432/tcp
+    volumes:
+      - ./data:/var/lib/postgresql/data
+      - ./provision:/provision:ro
+    # Background an idempotent reconciler, then exec the stock entrypoint as PID 1.
+    entrypoint:
+      - bash
+      - -c
+      - 'export PGPASSWORD="$$POSTGRES_PASSWORD"; ( until pg_isready -q -U "$$POSTGRES_USER" >/dev/null 2>&1; do sleep 1; done; bash /provision/provision.sh ) & exec docker-entrypoint.sh postgres'
+    healthcheck:
+      interval: 10s
+      retries: 5
+      timeout: 5s
+      test:
+        - CMD-SHELL
+        - pg_isready -U ${PG_USER} -d ${PG_DB} || exit 1
