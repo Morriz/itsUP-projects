@@ -15,6 +15,7 @@ services:
       - REACT_APP_DOCS_LANG=${REACT_APP_DOCS_LANG}
       - REACT_APP_DOCS_LANG_CODE=${REACT_APP_DOCS_LANG_CODE}
       - REACT_APP_DOCS_MULTILANG=${REACT_APP_DOCS_MULTILANG}
+      - OPENAI_MODEL=${OPENAI_MODEL}
     expose:
       - 8080/tcp
     image: morriz/ai-assistant:main
