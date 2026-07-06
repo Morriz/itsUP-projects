@@ -1,0 +1,6 @@
+enabled: true
+ingress:
+  - service: vikunja-app
+    router: http
+    port: 3456
+    domain: vikunja.instrukt.ai

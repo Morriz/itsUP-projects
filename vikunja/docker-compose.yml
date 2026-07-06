@@ -1,0 +1,49 @@
+services:
+  vikunja-db:
+    image: postgres:16-alpine
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    expose:
+      - 5432/tcp
+    networks:
+      - default
+    restart: unless-stopped
+    volumes:
+      - ./db:/var/lib/postgresql/data
+    healthcheck:
+      interval: 10s
+      retries: 5
+      test:
+        - CMD-SHELL
+        - pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB
+      timeout: 5s
+  vikunja-app:
+    depends_on:
+      vikunja-db:
+        condition: service_healthy
+    environment:
+      - VIKUNJA_SERVICE_PUBLICURL=https://vikunja.instrukt.ai/
+      - VIKUNJA_SERVICE_SECRET=${VIKUNJA_SERVICE_SECRET}
+      - VIKUNJA_DATABASE_TYPE=postgres
+      - VIKUNJA_DATABASE_HOST=vikunja-db
+      - VIKUNJA_DATABASE_DATABASE=${POSTGRES_DB}
+      - VIKUNJA_DATABASE_USER=${POSTGRES_USER}
+      - VIKUNJA_DATABASE_PASSWORD=${POSTGRES_PASSWORD}
+    expose:
+      - 3456/tcp
+    image: vikunja/vikunja:latest
+    networks:
+      - default
+    restart: unless-stopped
+    volumes:
+      - ./files:/app/vikunja/files
+    healthcheck:
+      interval: 15s
+      retries: 3
+      start_period: 30s
+      test:
+        - CMD-SHELL
+        - wget -O/dev/null -q --timeout=10 http://localhost:3456/
+      timeout: 15s
