@@ -1,6 +1,6 @@
-enabled: false
+enabled: true
 ingress:
-- service: planka-app
-  router: http
-  domain: planka.instrukt.ai
-  port: 1337
+  - service: planka-app
+    router: http
+    domain: planka.instrukt.ai
+    port: 1337
