@@ -19,10 +19,19 @@ services:
         - CMD-SHELL
         - pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB
       timeout: 5s
+  vikunja-files-init:
+    image: busybox:latest
+    command: ["sh", "-c", "chgrp -R 0 /files && chmod -R g+rwX /files"]
+    volumes:
+      - ./files:/files
+    networks:
+      - default
   vikunja-app:
     depends_on:
       vikunja-db:
         condition: service_healthy
+      vikunja-files-init:
+        condition: service_completed_successfully
     environment:
       - VIKUNJA_SERVICE_PUBLICURL=https://vikunja.instrukt.ai/
       - VIKUNJA_SERVICE_SECRET=${VIKUNJA_SERVICE_SECRET}
@@ -34,6 +43,7 @@ services:
     expose:
       - 3456/tcp
     image: vikunja/vikunja:latest
+    user: "1000:0"
     networks:
       - default
     restart: unless-stopped
