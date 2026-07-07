@@ -1,7 +1,19 @@
 services:
+  planka-files-init:
+    image: busybox:latest
+    command: ["sh", "-c", "chown -R 1000:1000 /data /background-images /logs"]
+    volumes:
+      - ./app-data:/data
+      - ./app-background-images:/background-images
+      - ./logs:/logs
+    networks:
+      - default
   planka-app:
     depends_on:
-      - planka-db
+      planka-db:
+        condition: service_healthy
+      planka-files-init:
+        condition: service_completed_successfully
     environment:
       - BASE_URL=${BASE_URL}
       - DATABASE_URL=${DATABASE_URL}
