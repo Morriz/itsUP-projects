@@ -1,3 +1,6 @@
+x-erpnext-create-site-env: &erpnext-create-site-env
+  DB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+
 x-erpnext-create-site: &erpnext-create-site
   image: frappe/erpnext:v16.22.0
   entrypoint:
@@ -123,15 +126,15 @@ services:
   erpnext-create-site-instrukt-ai:
     <<: *erpnext-create-site
     environment:
+      <<: *erpnext-create-site-env
       ADMIN_PASSWORD: ${INSTRUKT_AI_ADMIN_PASSWORD}
-      DB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
       SITE_NAME: instrukt-ai.erpnext.instrukt.ai
 
   erpnext-create-site-sandbox:
     <<: *erpnext-create-site
     environment:
+      <<: *erpnext-create-site-env
       ADMIN_PASSWORD: ${SANDBOX_ADMIN_PASSWORD}
-      DB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
       SITE_NAME: sandbox.erpnext.instrukt.ai
 
   erpnext-sites-ready:
