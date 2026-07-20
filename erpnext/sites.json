@@ -1,0 +1,10 @@
+[
+  {
+    "name": "instrukt-ai.erpnext.instrukt.ai",
+    "admin_password_env": "INSTRUKT_AI_ADMIN_PASSWORD"
+  },
+  {
+    "name": "sandbox.erpnext.instrukt.ai",
+    "admin_password_env": "SANDBOX_ADMIN_PASSWORD"
+  }
+]
