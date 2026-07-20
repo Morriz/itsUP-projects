@@ -2,9 +2,8 @@ enabled: true
 ingress:
   - service: erpnext-frontend
     router: http
-    domain: instrukt-ai.erpnext.instrukt.ai
     port: 8080
-  - service: erpnext-frontend
-    router: http
-    domain: sandbox.erpnext.instrukt.ai
-    port: 8080
+    tls:
+      main: instrukt-ai.erpnext.instrukt.ai
+      sans:
+        - sandbox.erpnext.instrukt.ai
