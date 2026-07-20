@@ -127,6 +127,13 @@ services:
       DB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
       SITE_NAME: instrukt-ai.erpnext.instrukt.ai
 
+  erpnext-create-site-sandbox:
+    <<: *erpnext-create-site
+    environment:
+      ADMIN_PASSWORD: ${SANDBOX_ADMIN_PASSWORD}
+      DB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      SITE_NAME: sandbox.erpnext.instrukt.ai
+
   erpnext-sites-ready:
     image: frappe/erpnext:v16.22.0
     entrypoint:
@@ -134,6 +141,8 @@ services:
     restart: "no"
     depends_on:
       erpnext-create-site-instrukt-ai:
+        condition: service_completed_successfully
+      erpnext-create-site-sandbox:
         condition: service_completed_successfully
 
   erpnext-backend:

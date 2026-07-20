@@ -4,3 +4,7 @@ ingress:
     router: http
     domain: instrukt-ai.erpnext.instrukt.ai
     port: 8080
+  - service: erpnext-frontend
+    router: http
+    domain: sandbox.erpnext.instrukt.ai
+    port: 8080
