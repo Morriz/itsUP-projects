@@ -49,17 +49,8 @@ services:
     image: frappe/erpnext:v16.22.0
     entrypoint:
       - bash
-      - -c
     command:
-      - >
-        [ -f sites/common_site_config.json ] || echo '{}' > sites/common_site_config.json;
-        ls -1 apps > sites/apps.txt;
-        bench set-config -g db_host $$DB_HOST;
-        bench set-config -gp db_port $$DB_PORT;
-        bench set-config -g redis_cache "redis://$$REDIS_CACHE";
-        bench set-config -g redis_queue "redis://$$REDIS_QUEUE";
-        bench set-config -g redis_socketio "redis://$$REDIS_QUEUE";
-        bench set-config -gp socketio_port $$SOCKETIO_PORT;
+      - /opt/erpnext/configure.sh
     environment:
       - DB_HOST=erpnext-db
       - DB_PORT=3306
@@ -77,6 +68,7 @@ services:
       erpnext-redis-queue:
         condition: service_started
     volumes:
+      - ../../projects/erpnext/configure.sh:/opt/erpnext/configure.sh:ro
       - ./sites:/home/frappe/frappe-bench/sites
       - ./logs:/home/frappe/frappe-bench/logs
 
@@ -84,56 +76,8 @@ services:
     image: frappe/erpnext:v16.22.0
     entrypoint:
       - bash
-      - -c
     command:
-      - >
-        set -euo pipefail;
-        wait-for-it -t 120 erpnext-db:3306;
-        wait-for-it -t 120 erpnext-redis-cache:6379;
-        wait-for-it -t 120 erpnext-redis-queue:6379;
-        export start=$$(date +%s);
-        until [[ -n $$(grep -hs ^ sites/common_site_config.json | jq -r ".db_host // empty") ]] && \
-          [[ -n $$(grep -hs ^ sites/common_site_config.json | jq -r ".redis_cache // empty") ]] && \
-          [[ -n $$(grep -hs ^ sites/common_site_config.json | jq -r ".redis_queue // empty") ]];
-        do
-          echo "Waiting for sites/common_site_config.json to be created";
-          sleep 5;
-          if (( $$(date +%s)-start > 120 )); then
-            echo "could not find sites/common_site_config.json with required keys";
-            exit 1;
-          fi;
-        done;
-        echo "sites/common_site_config.json found";
-        SITE_COUNT=$$(jq -r "length" /opt/erpnext/sites.json);
-        if (( SITE_COUNT < 1 )); then
-          echo "sites.json must declare at least one site";
-          exit 1;
-        fi;
-        jq -e '([.[].name] | length) == ([.[].name] | unique | length)' /opt/erpnext/sites.json >/dev/null;
-        jq -c '.[]' /opt/erpnext/sites.json | while IFS= read -r site;
-        do
-          SITE_NAME=$$(echo "$$site" | jq -r ".name // empty");
-          ADMIN_PASSWORD_ENV=$$(echo "$$site" | jq -r ".admin_password_env // empty");
-          if [[ -z "$$SITE_NAME" ]] || [[ -z "$$ADMIN_PASSWORD_ENV" ]]; then
-            echo "each sites.json entry requires name and admin_password_env";
-            exit 1;
-          fi;
-          if [[ ! "$$ADMIN_PASSWORD_ENV" =~ ^[A-Z][A-Z0-9_]*$$ ]]; then
-            echo "invalid admin password variable name for site '$$SITE_NAME'";
-            exit 1;
-          fi;
-          ADMIN_PASSWORD=$$(printenv "$$ADMIN_PASSWORD_ENV" || true);
-          if [[ -z "$$ADMIN_PASSWORD" ]]; then
-            echo "missing admin password variable '$$ADMIN_PASSWORD_ENV' for site '$$SITE_NAME'";
-            exit 1;
-          fi;
-          if [ -d "sites/$$SITE_NAME" ]; then
-            echo "site '$$SITE_NAME' already exists - skipping create (idempotent re-apply)";
-          else
-            bench new-site --mariadb-user-host-login-scope='%' --admin-password="$$ADMIN_PASSWORD" --db-root-username=root --db-root-password="$$DB_ROOT_PASSWORD" --install-app erpnext "$$SITE_NAME";
-          fi;
-          bench --site "$$SITE_NAME" set-config host_name "https://$$SITE_NAME";
-        done;
+      - /opt/erpnext/create-sites.sh
     environment:
       DB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
       INSTRUKT_AI_ADMIN_PASSWORD: ${INSTRUKT_AI_ADMIN_PASSWORD}
@@ -145,6 +89,7 @@ services:
       erpnext-configurator:
         condition: service_completed_successfully
     volumes:
+      - ../../projects/erpnext/create-sites.sh:/opt/erpnext/create-sites.sh:ro
       - ../../projects/erpnext/sites.json:/opt/erpnext/sites.json:ro
       - ./sites:/home/frappe/frappe-bench/sites
       - ./logs:/home/frappe/frappe-bench/logs
