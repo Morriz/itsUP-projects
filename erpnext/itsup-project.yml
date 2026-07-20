@@ -2,5 +2,5 @@ enabled: true
 ingress:
   - service: erpnext-frontend
     router: http
-    domain: erpnext.srv.instrukt.ai
+    domain: instrukt-ai.erpnext.instrukt.ai
     port: 8080
