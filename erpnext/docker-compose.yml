@@ -68,7 +68,7 @@ services:
       erpnext-redis-queue:
         condition: service_started
     volumes:
-      - ../../projects/erpnext/configure.sh:/opt/erpnext/configure.sh:ro
+      - ./files/configure.sh:/opt/erpnext/configure.sh:ro
       - ./sites:/home/frappe/frappe-bench/sites
       - ./logs:/home/frappe/frappe-bench/logs
 
@@ -89,8 +89,8 @@ services:
       erpnext-configurator:
         condition: service_completed_successfully
     volumes:
-      - ../../projects/erpnext/create-sites.sh:/opt/erpnext/create-sites.sh:ro
-      - ../../projects/erpnext/sites.json:/opt/erpnext/sites.json:ro
+      - ./files/create-sites.sh:/opt/erpnext/create-sites.sh:ro
+      - ./files/sites.json:/opt/erpnext/sites.json:ro
       - ./sites:/home/frappe/frappe-bench/sites
       - ./logs:/home/frappe/frappe-bench/logs
 

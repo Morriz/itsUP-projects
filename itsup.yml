@@ -30,8 +30,8 @@ crowdsec:
 versions:
   # v3.5.x hardcodes Docker API v1.24 in its docker client; modern Docker
   # daemons (>=27.x) reject it ("client version 1.24 is too old, minimum 1.40").
-  # v3.6.17 negotiates a newer version. Pin explicit so future v3.6.x changes
+  # v3.6+ negotiates a newer version. Pin explicit so upstream changes
   # don't surprise us.
-  traefik: v3.6.17
-  crowdsec: v1.7.3
+  traefik: v3.7.8
+  crowdsec: v1.7.8
 schemaVersion: 2.1.0
