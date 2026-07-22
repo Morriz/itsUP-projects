@@ -19,8 +19,11 @@ if [ -n "${SMTP_HOST:-}" ]; then
   bench set-config -g email_sender_name "${SMTP_SENDER_NAME:-}"
   if [ "${SMTP_PORT:-587}" = "465" ]; then
     bench set-config -gp use_ssl 1
+    bench set-config -gp use_tls 0
   else
+    bench set-config -gp use_ssl 0
     bench set-config -gp use_tls 1
   fi
+  bench set-config -gp smtp_no_ehlo_after_auth 1
   bench set-config -gp always_use_account_email_id_as_sender 1
 fi
