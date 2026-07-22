@@ -1,0 +1,6 @@
+enabled: true
+host: 192.168.1.5
+ingress:
+  - domain: outbox.instrukt.ai
+    port: 8080
+    router: http
