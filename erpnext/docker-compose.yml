@@ -102,6 +102,9 @@ services:
 
   erpnext-backend:
     image: frappe/erpnext:v16.22.0
+    dns:
+      - 1.1.1.1
+      - 9.9.9.9
     networks:
       - default
     restart: unless-stopped
@@ -129,6 +132,9 @@ services:
 
   erpnext-queue-long:
     image: frappe/erpnext:v16.22.0
+    dns:
+      - 1.1.1.1
+      - 9.9.9.9
     command:
       - bench
       - worker
@@ -146,6 +152,9 @@ services:
 
   erpnext-queue-short:
     image: frappe/erpnext:v16.22.0
+    dns:
+      - 1.1.1.1
+      - 9.9.9.9
     command:
       - bench
       - worker
@@ -163,6 +172,9 @@ services:
 
   erpnext-scheduler:
     image: frappe/erpnext:v16.22.0
+    dns:
+      - 1.1.1.1
+      - 9.9.9.9
     command:
       - bench
       - schedule
