@@ -2,5 +2,6 @@ enabled: true
 host: 127.0.0.1
 ingress:
   - domain: itsup.srv.instrukt.ai
+    path_prefix: /redirect
     port: 8888
     router: http
