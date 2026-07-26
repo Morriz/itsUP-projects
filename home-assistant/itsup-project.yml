@@ -2,11 +2,5 @@ enabled: true
 host: 192.168.1.74
 ingress:
   - domain: home.idiotz.nl
-    passthrough: true
-    port: 443
-    router: tcp
-    proxyprotocol: '2'
-  - domain: home.idiotz.nl
-    path_prefix: /.well-known/acme-challenge/
-    port: 80
+    port: 8123
     router: http
