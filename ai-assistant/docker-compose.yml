@@ -2,7 +2,9 @@ services:
   ai-assistant-web:
     environment:
       - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
-      - AWS_S3_HOST=${AWS_S3_HOST}
+      - AWS_S3_HOST=minio-app:9000
+      - AWS_S3_HOST_BUCKET=minio-app:9000
+      - AWS_S3_USE_SSL=false
       - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
       - DB_FILE=${DB_FILE}
       - ELEVENLABS_API_KEY=${ELEVENLABS_API_KEY}
@@ -21,7 +23,11 @@ services:
     image: morriz/ai-assistant:main
     restart: unless-stopped
     healthcheck:
-      test: wget -O/dev/null -q http://localhost:8080/chatapi/health
+      test:
+        - CMD-SHELL
+        - >-
+          wget -q -T 5 -O - --header='Host: utrecht.ai-assistent.app'
+          http://127.0.0.1:8080/chatapi/health | grep -q '"status":"ok"'
       interval: 1m
       timeout: 5s
       retries: 3
