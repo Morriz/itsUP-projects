@@ -2,8 +2,9 @@ services:
   ai-assistant-web:
     environment:
       - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
-      - AWS_S3_HOST=minio.srv.instrukt.ai
-      - AWS_S3_HOST_BUCKET=minio.srv.instrukt.ai
+      - AWS_S3_HOST=minio-app:9000
+      - AWS_S3_HOST_BUCKET=minio-app:9000
+      - AWS_S3_USE_SSL=false
       - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
       - DB_FILE=${DB_FILE}
       - ELEVENLABS_API_KEY=${ELEVENLABS_API_KEY}
@@ -17,8 +18,6 @@ services:
       - REACT_APP_DOCS_LANG_CODE=${REACT_APP_DOCS_LANG_CODE}
       - REACT_APP_DOCS_MULTILANG=${REACT_APP_DOCS_MULTILANG}
       - OPENAI_MODEL=${OPENAI_MODEL}
-    extra_hosts:
-      - minio.srv.instrukt.ai:192.168.1.30
     expose:
       - 8080/tcp
     image: morriz/ai-assistant:main
