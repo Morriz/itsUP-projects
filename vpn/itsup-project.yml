@@ -4,10 +4,4 @@ ingress:
     domain: vpn.srv.instrukt.ai
     hostport: 1194
     port: 1194
-    protocol: udp
-    router: udp
-  - service: vpn-openvpn
-    domain: vpn.srv.instrukt.ai
-    hostport: 1194
-    port: 1194
     router: tcp
