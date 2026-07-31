@@ -26,6 +26,10 @@ crowdsec:
   - crowdsecurity/whitelist-good-actors
   - crowdsecurity/appsec-virtual-patching
 
+alert:
+  command: >-
+    /bin/sh -c 'body=$(cat); exec "$1" message "$2" "$body" --subject "itsUP alert: $ITSUP_ALERT_UNIT"' telec-alert ${TELEC_BIN} ${TELEC_PERSON}
+
 # Component versions
 versions:
   # v3.5.x hardcodes Docker API v1.24 in its docker client; modern Docker
