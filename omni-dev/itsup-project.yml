@@ -1,0 +1,6 @@
+enabled: true
+host: 192.168.1.66
+ingress:
+  - domain: omni-dev.instrukt.ai
+    port: 6767
+    router: http
