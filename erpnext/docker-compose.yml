@@ -46,7 +46,7 @@ services:
       - ./redis-queue:/data
 
   erpnext-configurator:
-    image: frappe/erpnext:v16.22.0
+    image: frappe/erpnext:v16.34.1
     entrypoint:
       - bash
     command:
@@ -79,7 +79,7 @@ services:
       - ./logs:/home/frappe/frappe-bench/logs
 
   erpnext-create-sites:
-    image: frappe/erpnext:v16.22.0
+    image: frappe/erpnext:v16.34.1
     entrypoint:
       - bash
     command:
@@ -100,8 +100,25 @@ services:
       - ./sites:/home/frappe/frappe-bench/sites
       - ./logs:/home/frappe/frappe-bench/logs
 
+  erpnext-migrate:
+    image: frappe/erpnext:v16.34.1
+    entrypoint:
+      - bash
+      - -c
+    command:
+      - bench --site all migrate
+    networks:
+      - default
+    restart: "no"
+    depends_on:
+      erpnext-create-sites:
+        condition: service_completed_successfully
+    volumes:
+      - ./sites:/home/frappe/frappe-bench/sites
+      - ./logs:/home/frappe/frappe-bench/logs
+
   erpnext-backend:
-    image: frappe/erpnext:v16.22.0
+    image: frappe/erpnext:v16.34.1
     dns:
       - 1.1.1.1
       - 9.9.9.9
@@ -109,14 +126,14 @@ services:
       - default
     restart: unless-stopped
     depends_on:
-      erpnext-create-sites:
+      erpnext-migrate:
         condition: service_completed_successfully
     volumes:
       - ./sites:/home/frappe/frappe-bench/sites
       - ./logs:/home/frappe/frappe-bench/logs
 
   erpnext-websocket:
-    image: frappe/erpnext:v16.22.0
+    image: frappe/erpnext:v16.34.1
     command:
       - node
       - /home/frappe/frappe-bench/apps/frappe/socketio.js
@@ -124,14 +141,14 @@ services:
       - default
     restart: unless-stopped
     depends_on:
-      erpnext-create-sites:
+      erpnext-migrate:
         condition: service_completed_successfully
     volumes:
       - ./sites:/home/frappe/frappe-bench/sites
       - ./logs:/home/frappe/frappe-bench/logs
 
   erpnext-queue-long:
-    image: frappe/erpnext:v16.22.0
+    image: frappe/erpnext:v16.34.1
     dns:
       - 1.1.1.1
       - 9.9.9.9
@@ -144,14 +161,14 @@ services:
       - default
     restart: unless-stopped
     depends_on:
-      erpnext-create-sites:
+      erpnext-migrate:
         condition: service_completed_successfully
     volumes:
       - ./sites:/home/frappe/frappe-bench/sites
       - ./logs:/home/frappe/frappe-bench/logs
 
   erpnext-queue-short:
-    image: frappe/erpnext:v16.22.0
+    image: frappe/erpnext:v16.34.1
     dns:
       - 1.1.1.1
       - 9.9.9.9
@@ -164,14 +181,14 @@ services:
       - default
     restart: unless-stopped
     depends_on:
-      erpnext-create-sites:
+      erpnext-migrate:
         condition: service_completed_successfully
     volumes:
       - ./sites:/home/frappe/frappe-bench/sites
       - ./logs:/home/frappe/frappe-bench/logs
 
   erpnext-scheduler:
-    image: frappe/erpnext:v16.22.0
+    image: frappe/erpnext:v16.34.1
     dns:
       - 1.1.1.1
       - 9.9.9.9
@@ -182,14 +199,14 @@ services:
       - default
     restart: unless-stopped
     depends_on:
-      erpnext-create-sites:
+      erpnext-migrate:
         condition: service_completed_successfully
     volumes:
       - ./sites:/home/frappe/frappe-bench/sites
       - ./logs:/home/frappe/frappe-bench/logs
 
   erpnext-frontend:
-    image: frappe/erpnext:v16.22.0
+    image: frappe/erpnext:v16.34.1
     command:
       - nginx-entrypoint.sh
     environment:
