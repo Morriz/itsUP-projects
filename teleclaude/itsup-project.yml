@@ -1,0 +1,9 @@
+enabled: true
+host: 127.0.0.1
+ingress:
+  # TeleClaude ingress node: Meta/GitHub/native webhooks to the daemon's
+  # loopback ingress listener. Requests authenticate by HMAC signature.
+  - domain: hooks.srv.instrukt.ai
+    path_prefix: /hooks/inbound
+    port: 8420
+    router: http
