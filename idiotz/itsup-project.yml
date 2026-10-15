@@ -2,5 +2,8 @@ enabled: true
 ingress:
 - service: idiotz-app
   router: http
-  domain: idiotz.nl
+  tls:
+    main: idiotz.nl
+    sans:
+    - www.idiotz.nl
   port: 8080
