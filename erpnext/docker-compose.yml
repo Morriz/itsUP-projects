@@ -46,7 +46,7 @@ services:
       - ./redis-queue:/data
 
   erpnext-configurator:
-    image: frappe/erpnext:v16.34.1
+    image: frappe/erpnext:v16.55.0
     entrypoint:
       - bash
     command:
@@ -65,7 +65,7 @@ services:
       - SMTP_SENDER_NAME=${SMTP_SENDER_NAME}
     networks:
       - default
-    restart: "no"
+    restart: 'no'
     depends_on:
       erpnext-db:
         condition: service_healthy
@@ -79,7 +79,7 @@ services:
       - ./logs:/home/frappe/frappe-bench/logs
 
   erpnext-create-sites:
-    image: frappe/erpnext:v16.34.1
+    image: frappe/erpnext:v16.55.0
     entrypoint:
       - bash
     command:
@@ -90,7 +90,7 @@ services:
       SANDBOX_ADMIN_PASSWORD: ${SANDBOX_ADMIN_PASSWORD}
     networks:
       - default
-    restart: "no"
+    restart: 'no'
     depends_on:
       erpnext-configurator:
         condition: service_completed_successfully
@@ -101,7 +101,7 @@ services:
       - ./logs:/home/frappe/frappe-bench/logs
 
   erpnext-migrate:
-    image: frappe/erpnext:v16.34.1
+    image: frappe/erpnext:v16.55.0
     entrypoint:
       - bash
       - -c
@@ -109,7 +109,7 @@ services:
       - bench --site all migrate
     networks:
       - default
-    restart: "no"
+    restart: 'no'
     depends_on:
       erpnext-create-sites:
         condition: service_completed_successfully
@@ -118,7 +118,7 @@ services:
       - ./logs:/home/frappe/frappe-bench/logs
 
   erpnext-backend:
-    image: frappe/erpnext:v16.34.1
+    image: frappe/erpnext:v16.55.0
     dns:
       - 1.1.1.1
       - 9.9.9.9
@@ -133,7 +133,7 @@ services:
       - ./logs:/home/frappe/frappe-bench/logs
 
   erpnext-websocket:
-    image: frappe/erpnext:v16.34.1
+    image: frappe/erpnext:v16.55.0
     command:
       - node
       - /home/frappe/frappe-bench/apps/frappe/socketio.js
@@ -148,7 +148,7 @@ services:
       - ./logs:/home/frappe/frappe-bench/logs
 
   erpnext-queue-long:
-    image: frappe/erpnext:v16.34.1
+    image: frappe/erpnext:v16.55.0
     dns:
       - 1.1.1.1
       - 9.9.9.9
@@ -168,7 +168,7 @@ services:
       - ./logs:/home/frappe/frappe-bench/logs
 
   erpnext-queue-short:
-    image: frappe/erpnext:v16.34.1
+    image: frappe/erpnext:v16.55.0
     dns:
       - 1.1.1.1
       - 9.9.9.9
@@ -188,7 +188,7 @@ services:
       - ./logs:/home/frappe/frappe-bench/logs
 
   erpnext-scheduler:
-    image: frappe/erpnext:v16.34.1
+    image: frappe/erpnext:v16.55.0
     dns:
       - 1.1.1.1
       - 9.9.9.9
@@ -206,7 +206,7 @@ services:
       - ./logs:/home/frappe/frappe-bench/logs
 
   erpnext-frontend:
-    image: frappe/erpnext:v16.34.1
+    image: frappe/erpnext:v16.55.0
     command:
       - nginx-entrypoint.sh
     environment:
