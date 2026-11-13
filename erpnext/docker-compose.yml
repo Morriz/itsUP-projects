@@ -122,6 +122,11 @@ services:
     dns:
       - 1.1.1.1
       - 9.9.9.9
+    environment:
+      # Only this stack's own containers reach the backend port, and the
+      # frontend passes on the scheme the client used. Trusting it makes the
+      # site build https addresses for itself, as its login discovery needs.
+      FORWARDED_ALLOW_IPS: '*'
     networks:
       - default
     restart: unless-stopped
