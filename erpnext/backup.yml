@@ -1,0 +1,11 @@
+# The nightly archive carries a consistent logical dump of the MariaDB engine
+# (under _backup/) instead of a copy of its running data directory.
+adapter: mariadb
+env:
+  MARIADB_SERVICE: erpnext-db
+exclude:
+  - db # live MariaDB data directory, replaced by the dump
+  - redis-cache # volatile
+  - redis-queue # volatile
+# sites/ stays in the archive: it holds uploaded files and each site's
+# encryption key.
