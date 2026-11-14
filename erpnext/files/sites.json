@@ -12,6 +12,9 @@
   },
   {
     "name": "sunfield.erpnext.instrukt.ai",
-    "admin_password_env": "SUNFIELD_ADMIN_PASSWORD"
+    "admin_password_env": "SUNFIELD_ADMIN_PASSWORD",
+    "apps": [
+      "hrms"
+    ]
   }
 ]
