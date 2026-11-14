@@ -7,3 +7,4 @@ ingress:
       main: instrukt-ai.erpnext.instrukt.ai
       sans:
         - sandbox.erpnext.instrukt.ai
+        - sunfield.erpnext.instrukt.ai
