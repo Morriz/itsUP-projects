@@ -5,7 +5,10 @@
   },
   {
     "name": "sandbox.erpnext.instrukt.ai",
-    "admin_password_env": "SANDBOX_ADMIN_PASSWORD"
+    "admin_password_env": "SANDBOX_ADMIN_PASSWORD",
+    "apps": [
+      "hrms"
+    ]
   },
   {
     "name": "sunfield.erpnext.instrukt.ai",

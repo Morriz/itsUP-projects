@@ -50,4 +50,15 @@ jq -c '.[]' "$SITES_FILE" | while IFS= read -r site; do
       --db-root-username=root --db-root-password="$DB_ROOT_PASSWORD" --install-app erpnext "$SITE_NAME"
   fi
   bench --site "$SITE_NAME" set-config host_name "https://$SITE_NAME"
+  echo "$site" | jq -r '(.apps // [])[]' | while IFS= read -r APP; do
+    if [[ ! $APP =~ ^[a-z][a-z0-9_]*$ ]]; then
+      echo "invalid app name '$APP' for site '$SITE_NAME'"
+      exit 1
+    fi
+    if bench --site "$SITE_NAME" list-apps | awk '{print $1}' | grep -qx "$APP"; then
+      echo "app '$APP' already installed on '$SITE_NAME' - skipping (idempotent re-apply)"
+    else
+      bench --site "$SITE_NAME" install-app "$APP"
+    fi
+  done
 done
