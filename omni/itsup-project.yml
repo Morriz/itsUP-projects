@@ -1,4 +1,4 @@
-enabled: true
+enabled: false
 host: 192.168.1.5
 ingress:
   - domain: omni.instrukt.ai

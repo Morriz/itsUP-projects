@@ -1,4 +1,4 @@
-enabled: true
+enabled: false
 ingress:
   - service: n8n-mauro-app
     router: http
